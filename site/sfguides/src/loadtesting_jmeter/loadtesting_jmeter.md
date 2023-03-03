@@ -17,6 +17,9 @@ In this session we will cover how to perform load testing for your Data applicat
 ### A word of caution
 We encoruage customers to set up an additional account with the STANDARD edition to make sure you reducing as much cost as possible when doing tesing
 
+> aside positive
+>
+> This Quickstart guide is intended to the focus on strickly backend (i.e. Snowflake) Testing.  In addition, JMETER only focuses on a JDBC connector.  Other connectors have different capabilities and limitation and may skew results.  This guide is intended to focus on our java connector and executing queries against Snowflake.  You will need to validate end to end performance of your application if you want a jolistic view of your managed application.
 
 ### Prerequisites
 - Have some general familiarity writing sql statements
@@ -191,7 +194,31 @@ Click on query history in the activity pain your snowflake account.  You can see
 
 ![2](assets/results1.png)
 
-## Enhancing Performance
+## Enhancing performance with query Acceleration Service
+Duration: 15
+
+Query Acceleration Service is an incredible feature that allows Snowflake to intuitively scale your compute resources to a particular query.  Effectively, it will automatically recognize when a query could use additional compute power and auto provision.  You can read much more about the service in the docs: https://docs.snowflake.com/en/user-guide/query-acceleration-service
+
+In this section we will walk through turning on Query Acceleration Service on a warehouse, and then seeing that impacts our load times.
+
+For this example, I've turned off QAS to do my initial testing using a similar data set to what we've seen above.  
+
+- Notice how each query takes roughly 22 seconds to execute against on 24GB of data.
+
+![2](assets/jmeter15.png)
+
+Next, Lets turn on QAS for this warehouse:
+
+```sql
+alter warehouse main_wh set
+  ENABLE_QUERY_ACCELERATION = true
+  QUERY_ACCELERATION_MAX_SCALE_FACTOR = 100;
+```
+- Notice here, with QAS turned on, the system auto provisions additional compute for you.  Now the average query time is closer to about 15 seconds.
+
+![2](assets/jmeter16.png)
+
+## Additional ways of Enhancing Performance
 Duration: 5
 
 There are many ways to improve performance in snowflake.  We cannot possibly cover all of the different scenarios in this guide.  A few that quickly come to mind are:
@@ -201,6 +228,7 @@ There are many ways to improve performance in snowflake.  We cannot possibly cov
 - Preaggrating certain repeatable results
 - Using Materialized views
 - Multi-cluster warehouses
+- Query Acceleration Service
 
 Again, the list is too long to enumerate here, but please work with your account team to see what makes sense for your environment!
 
