@@ -7,7 +7,7 @@ status: draft
 feedback link: https://github.com/Snowflake-Labs/sfguides/issues
 tags: Getting Started, Application Design, Load Testing 
 
-# Load Testing in Snowflake
+# Load Testing in Snowflake and Using Query Acceleration Services
 <!-- ------------------------ -->
 ## Overview 
 Duration: 2
