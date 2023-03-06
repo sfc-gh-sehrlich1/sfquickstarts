@@ -1,4 +1,4 @@
-author: Samuel Ehrlich
+authors: Samuel Ehrlich & Brad Culderson
 id: loadtesting_jmeter
 summary: Load Testing in Snowflake
 categories: Getting-Started
@@ -15,7 +15,6 @@ Duration: 2
 In this session we will cover how to perform load testing for your Data application workload using Jmeter.  Many organizations want to make sure their application or service can handle many users and many queries concurrently, with as little wait time as possible.  This guide will walk you through how you set up robust and accurate test to mimic a user experience.
 
 ### A word of caution
-We encoruage customers to set up an additional account with the STANDARD edition to make sure you reducing as much cost as possible when doing tesing
 
 > aside positive
 >
@@ -98,6 +97,10 @@ jmeter
 
 Upon launching JMeter, you will be met with a blank Test Plan and WorkBench.  You should see this interface:
 ![2](assets/jmeter1.png)
+
+> aside positive
+>
+> In addition, we've included jmx file in the repository.  As a quick alternative, you can simply load that file, and replace the credentials.
 
 Now we need to add elements to our test.
 
@@ -194,7 +197,7 @@ Click on query history in the activity pain your snowflake account.  You can see
 
 ![2](assets/results1.png)
 
-## Enhancing performance with query Acceleration Service
+## Enhancing performance with Query Acceleration Service (QAS)
 Duration: 15
 
 Query Acceleration Service is an incredible feature that allows Snowflake to intuitively scale your compute resources to a particular query.  Effectively, it will automatically recognize when a query could use additional compute power and auto provision.  You can read much more about the service in the docs: https://docs.snowflake.com/en/user-guide/query-acceleration-service
@@ -224,10 +227,18 @@ Duration: 5
 There are many ways to improve performance in snowflake.  We cannot possibly cover all of the different scenarios in this guide.  A few that quickly come to mind are:
 
 - Adding Clustering keys to your data
+- Multi-cluster warehouses
+> aside positive
+>
+> NOTE: One of the best ways to manage scalability is with MCW.  This will listen for any queueing going on within queries, and will auto scale your warehouse with the appropriate nodes.  This makes managing scalability very easy in Snowflake.  To learn more about this feature see this docs link: [https://docs.snowflake.com/en/user-guide/warehouses-multicluster](https://docs.snowflake.com/en/user-guide/warehouses-multicluster)
+
+> aside positive
+>
+> NOTE: This is an enterprise feature
+
 - Using Search optimization service
 - Preaggrating certain repeatable results
 - Using Materialized views
-- Multi-cluster warehouses
 - Query Acceleration Service
 
 Again, the list is too long to enumerate here, but please work with your account team to see what makes sense for your environment!
