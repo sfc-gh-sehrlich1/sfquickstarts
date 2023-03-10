@@ -321,8 +321,9 @@ Duration: 10
 - How to connect to snowflake from JMETER
 - How to load sample data into snowflake
 - How to run a series of load test in JMETER
+- How to Optimize snowflake in various ways
+- Examples of how these features help with query performance in a variety of ways!
 
 ### Call to Action
-- The next step wou
 
 We encourage you to do your own testing to see the power of your applications when they are built on top of the Snowflake Platform!
