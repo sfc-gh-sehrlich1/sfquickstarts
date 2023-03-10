@@ -197,7 +197,46 @@ Click on query history in the activity pain your snowflake account.  You can see
 
 ![2](assets/results1.png)
 
-## Enhancing performance with Query Acceleration Service (QAS)
+## Ways of scaling
+Duration: 10
+
+This is meant to be a very brief primer on the various ways snowflake can help with query performance.  To be sure, the ways in which snowflake can be configured to maximize performance or too enumerated to detail here.  But this will serve as a good primer on the various optimization efforts to start with.
+
+The first thing to understand is the various vectors which snowflake can be scaled.
+
+### Scaling Up
+
+![2](assets/scaling2.png)
+
+Scaling up simply mean adding more power to my existing computation.  This typically is good for more complex queries, or queries that have to evaluate larger sets of data.
+
+#### Increasing warehouse size
+The simplest way to do this would be to increase the warehouse size.  For example, moving from an XSMALL to SMALL and MEDIUM to a LARGE.  This simple trick give you exponetially more compute power
+
+#### Query Acceleration Service
+Next, use a feature like query acceleration service.  fectively, it will automatically recognize when a query could use additional compute power and auto provision.  This is another example of scaling up because Snowflake provides additional compute power to your resources.
+
+### Scaling Out
+
+![2](assets/scaling.png)
+
+In contrast to scaling up, scaling out is providing more resources to handle more distributed load.  This typically helps when you have lots of users accessing the system at the same time or concurrently.
+
+#### Multi-Cluser Warehousing
+
+The primary way to improve concurrency is through multi-cluster warehousing.  This provides an automatic way for the system to know there are more users accessing the system, and it will automatically provision more nodes to support it.  This will more of the same size node to the warehouse to handle additional queries trying to access the system.
+
+### Performance Tuning
+
+#### Search Optimization Service
+
+This is a fantastic feature will create create a map of the table / data you are trying to query.  It will allow for much faster look ups of certain data that you need.  This is best turned on for large tables that require searching for small subsets of data within that data.  Here is more content around SOS: https://docs.snowflake.com/en/user-guide/search-optimization-service
+
+#### Clustering of Tables
+
+Clustering is effectively a way of ordering the data in logical ways so that it can found easily.  Snowflake will search micropartions to access data.  The less micropartitions it needs to search the better off we will be.  You can find more information on clustering the data here: https://docs.snowflake.com/en/user-guide/tables-clustering-keys
+
+## Case Study: Enhancing performance with Query Acceleration Service (QAS)
 Duration: 15
 
 Query Acceleration Service is an incredible feature that allows Snowflake to intuitively scale your compute resources to a particular query.  Effectively, it will automatically recognize when a query could use additional compute power and auto provision.  You can read much more about the service in the docs: https://docs.snowflake.com/en/user-guide/query-acceleration-service
@@ -221,24 +260,55 @@ alter warehouse main_wh set
 
 ![2](assets/jmeter16.png)
 
+## Case Study: Enhancing Performance with Search Optimization Service
+Duration: 10
+
+Search Optimization is great because allows your application to find small subsets of records in extremely fast ways.  In this section we validate Search Optimization through a series of JMETER Tests.
+
+For this example, I've turned off SOS to do my initial testing using a similar data set to what we've seen above.  
+
+- Notice how each query takes roughly 22 seconds to execute against on 24GB of data.
+
+![2](assets/jmeter15.png)
+
+Next, Lets turn on SOS for this table:
+
+```sql
+alter table test_SF1000_lineitem add search optimization on equality(L_ORDERKEY);
+```
+
+> NOTE: I've duplicated this table to turn on SOS so that we can maintain the other base tables.
+
+- Notice here, with SOS turned on, the system runs these queries much faster.  Here is an example query: 
+
+```sql
+select * from test_SF1000_lineitem where L_ORDERKEY = 984748421
+AND L_RECEIPTDATE > '1995-03-01' AND L_RECEIPTDATE < '1995-03-31';
+```
+
+![2](assets/jmeter17.png)
+
+One can see that this query is indeed using the SOS construct via the query profiler.
+
+![2](assets/jmeter18.png)
+
 ## Additional ways of Enhancing Performance
 Duration: 5
 
 There are many ways to improve performance in snowflake.  We cannot possibly cover all of the different scenarios in this guide.  A few that quickly come to mind are:
 
 - Adding Clustering keys to your data
-- Multi-cluster warehouses
+- Multi-cluster warehouses, now this will be about multi cluster
+
 > aside positive
 >
 > NOTE: One of the best ways to manage scalability is with MCW.  This will listen for any queueing going on within queries, and will auto scale your warehouse with the appropriate nodes.  This makes managing scalability very easy in Snowflake.  To learn more about this feature see this docs link: [https://docs.snowflake.com/en/user-guide/warehouses-multicluster](https://docs.snowflake.com/en/user-guide/warehouses-multicluster)
 
-> aside positive
->
 > NOTE: This is an enterprise feature
 
 - Using Search optimization service
 - Preaggrating certain repeatable results
-- Using Materialized views
+- Using Materialized views, streams and tasks,
 - Query Acceleration Service
 
 Again, the list is too long to enumerate here, but please work with your account team to see what makes sense for your environment!
